@@ -15,14 +15,14 @@ This document describes the function and services provides by payment providers 
   - [Pre-authorized payment](#pre-authorized-payment)
   - [Recurring payment](#recurring-payment)
   - [Direct Bill Payment](#direct-bill-payment)
-- [Implementation of public cashiers](#implementation-of-public-cashiers)
-    - [Implementing authorization](#implementing-authorization)
+- [Implementing a public cashier](#implementing-a-public-cashier)
+- [Implementing authorization](#implementing-authorization)
   - [Pre-authorization](#pre-authorization)
   - [Recurring payment](#recurring-payment-1)
 - [Verifying signatures](#verifying-signatures)
 - [Payment process](#payment-process)
-- [Making transactions on SSN](#making-transactions-on-ssn)
-- [Payment address resolver](#payment-address-resolver)
+  - [Making transactions on SSN](#making-transactions-on-ssn)
+  - [Payment address resolver](#payment-address-resolver)
 
 <!-- /code_chunk_output -->
 
@@ -32,7 +32,7 @@ This document describes the function and services provides by payment providers 
 
 **Token** a so called "I owe you", refers to an asset issued on SSN by payment providers
 
-**Asset** aew tokens on SSN identified by a asset_code and asset_issuer pair.
+**Asset** are tokens on SSN identified by a asset_code and asset_issuer pair.
 
 **Accounts** are electronic wallets which can issue and hold tokens. Accounts are identified by a public key, see also *network address*
 
@@ -130,7 +130,7 @@ Within the payment providers environment the user is prompted to provide the pay
 
 The SSN PA resolver API will resolve the payment address and query the merchant for the billing amount and other details.
 
-# Implementation of public cashiers
+# Implementing a public cashier
 
 The API reference to implemented a cashier is published at https://api-reference.ssn.digital. The minimum required implementation is the information service and the onetime charge API:
 
@@ -148,7 +148,7 @@ and recurring payments by implementing:
 * `/recurring/{payment_address}` endpoint to setup recurring payments
 * and the corresponding recurring charging mechanism's 
 
-### Implementing authorization
+# Implementing authorization
 
 The SSN's cashier reference implementation contains 2 authorization request where the cashier request authorization from the user to  
 
@@ -299,7 +299,7 @@ If resolving the payment address and the data provided in the request body do no
 
 If the amount to pay returned from the resolver differs from the amount in the request, the amount returned from the resolver takes precedence, unless the charge was already defined for a recurring payment. 
 
-After the information gathering process the cashier should have the following data to construct a payment.
+After the information gathering process the cashier should have all data to construct a payment.
 
 
 2. Check and validate input received for the payment 
@@ -319,8 +319,8 @@ The cashier can access the SSN 3rd party API to verify trust lines from merchant
  }
  # response
  {
-  "code": 200,
-  "message": "asset will be accepted by account"
+  "status": 200,
+  "title": "asset will be accepted by account"
  }
 ```
 
@@ -350,7 +350,7 @@ The transaction ID proves to the user that the payment was done and he can use t
 
 If at any step in the process there is an error, the cashier must (if possible) show the error to the user and redirect him back to the callback URL once the user acknowledges the error. 
 
-# Making transactions on SSN
+## Making transactions on SSN
 
 Making transactions on SSN is supported by the 3rd party API transaction builder, it consist of the following steps:
 
@@ -368,7 +368,7 @@ Once the transaction ID is received it should be shown to the user, so he has a 
 
 The cashier can also build the transaction using the stellar SDK as published by the SDF. 
 
-# Payment address resolver
+## Payment address resolver
 
 A SSN payment address has the following formate
 

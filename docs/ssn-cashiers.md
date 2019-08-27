@@ -264,7 +264,7 @@ The cashier receives the billing request either:
 
 In order to process the charge the cashier first needs to resolve the payment address. When querying the resolver it will return the payment request details (some details maybe passed on via the request body if the cashier process is invoked via the public API. Please see the section on **payment address resolvers** below for more details. 
 
-`https://pa.ssn.digital/`
+`https://pa.ssn.digital/v1/`
 
 ```json
  # query
@@ -382,7 +382,7 @@ In order to protect information which can be gained from the lookup, the informa
 
 To establish trust that the query came from an authorized source, the request contains the following information:
 
-`https://pa.ssn.digital/`
+`https://pa.ssn.digital/v1/`
 
 ```json
 {
@@ -401,7 +401,7 @@ The encryption is based on ECC encryption using Curve25519 keys derived from the
 {
   "network_address": "GDTXTOPAMGXDSNHAOVLGPMSNHG3XIYTKZ5OUNVCP6J6XJI5AGMHSK3EP",
   "public_key": "GC3YDNXFW4SWTB6EPIS2473U5GH6BBIIE6GVP5MW6NVMPV5LMUACIQCM",
-  "details": "57e54c4daa4fb58ad6f2a6a1c82da19b7391d6545451b34cf2590560c9\
+  "encrypted": "57e54c4daa4fb58ad6f2a6a1c82da19b7391d6545451b34cf2590560c9\
               83384ada210a865fc9ca5abcc626b58f6d9b2e69c67a2de19cbe18fe5c\
               c522bacdc3e363839aca19cba18a0d710e34b8c97af7e589d45b3d99cb\
               dedd65ff524f8ed4c82dfabf01b3d2e48bf0db6b1d09f9c72f9df3b01b1\

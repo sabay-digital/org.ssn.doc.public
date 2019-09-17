@@ -8,6 +8,7 @@ technical regulations are procedures that must be followed when participating on
 
 * TR001 [Configuration of accounts on SSN for cashiers and merchants](/tr/tr001.md)
 * TR002 [Payment address and payment details](/tr/tr002.md)
+* TR003 [SSN QR Code Technical Details Based On EMV Co Standard](/tr/tr003.md)
 
 # Technical Guides
 

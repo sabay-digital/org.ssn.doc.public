@@ -12,6 +12,7 @@ technical regulations are procedures that must be followed when participating on
 * TR004 [Merchant Settlement process (cash out)](/tr/tr004.md)
 * TR005 [Network fees and native tokens](/tr/tr005.md)
 * TR006 [Account KYC settings](/tr/tr006.md)
+* TR007 [ssn.toml: extended configuration for organizations on SSN](/tr/tr007.md)
 
 # Technical Guides and work flows
 

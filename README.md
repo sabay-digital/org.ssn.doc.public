@@ -14,7 +14,7 @@ technical regulations are procedures that must be followed when participating on
 * TR006 [Account KYC settings](/tr/tr006.md)
 * TR007 [ssn.toml: extended configuration for organizations on SSN](/tr/tr007.md)
 
-# Technical Guides and work flows
+# Technical Guides and Workflows
 
 Technical guides describe services and solutions offered on SSN and how to implement them
 

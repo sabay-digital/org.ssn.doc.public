@@ -27,6 +27,6 @@ Technical guides describe services and solutions offered on SSN and how to imple
 
 Presentation on blockchain technology and SSN implementation
 
-* 2019/12 [SSN Introduction - read me first](https://docs.google.com/presentation/d/1t_vDODv1UBwGbcw26KGjye3En04Pr7t48YxOb9dsuLc/edit?usp=sharing)
+* 2019/12 [SSN Introduction - read me first](https://docs.google.com/presentation/d/1t_vDODv1UBwGbcw26KGjye3En04Pr7t48YxOb9dsuLc/present?usp=sharing)
 
 

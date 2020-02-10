@@ -38,7 +38,7 @@ func verify(hash, signature string) {
 	sig, _ := hex.DecodeString(signature)
 
 	// Verify signature
-	err = kp.Verify(mesg, sig)
+	err := kp.Verify(mesg, sig)
 	if err != nil {
 		fmt.Println("Signature invalid")
 	} else {

@@ -24,10 +24,22 @@ Technical guides describe services and solutions offered on SSN and how to imple
 * TG005 [PIN less top-up for mySabay accounts](/tg/tg005.md)
 * TG006 [Using cryptographic signatures on SSN](/tg/tg006.md)
 
+# Public resources (test network)
+
+* [SSN Public Horizon API](https://api.testing.ssn.digital/)
+* [SSN Explorer](https://explorer.master.ssn.digital/)
+* [SSN Lab for testing](https://lab.testing.ssn.digital/)
+
+# SDF documentation
+
+* [Horizon API endpoint](https://www.stellar.org/developers/horizon/reference/index.html)
+
 # Presentations 
 
 Presentation on blockchain technology and SSN implementation
 
 * 2019/12 [SSN Introduction - read me first](https://docs.google.com/presentation/d/1t_vDODv1UBwGbcw26KGjye3En04Pr7t48YxOb9dsuLc/present?usp=sharing)
+
+
 
 

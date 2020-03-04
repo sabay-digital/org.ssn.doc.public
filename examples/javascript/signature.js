@@ -15,10 +15,10 @@ function sign(hash) {
     // GDMG5Z4XL3CNGHK2GJD5TFIDRWRCBFVFV3WAFWFSBONWB6AKDODILHFZ
     let kp = StellarSdk.Keypair.fromSecret('SDWMABEXMMUVENWEB73FB3EQJB5QSKOYIBXDOXAE6A3NIHIYRUQJSWXY')
 
-    // Sign
-    sig = kp.sign(hash.digest('hex'))
+   // Sign
+   sig = kp.sign(Buffer.from(hash, 'hex'))
 
-    console.log(signature.toString('hex'))
+   console.log(signature.toString('hex'))
 }
 
 function verify(hash, signature) {

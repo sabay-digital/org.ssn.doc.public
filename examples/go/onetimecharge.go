@@ -20,48 +20,44 @@ func onetimeChargeHandler(w http.ResponseWriter, r *http.Request, ps httprouter.
 	req, err := url.ParseQuery(string(in))
 	ssn.Log(err, "onetimeChargeHandler: Parse URL encoded values")
 
-	// Step 1 - Verify Request Signature: https://github.com/sabay-digital/org.ssn.doc.public/blob/master/tg/tg001.md#step-1---verify-the-requst-signature-is-valid
-	// Build the request URL
-	reqURL := "https://" + r.Host + r.RequestURI
-	fmt.Println(reqURL)
-	// Hash the request URL
-	reqMesg := sha256.New()
-	reqMesg.Write([]byte(reqURL))
-	reqHash := hex.EncodeToString(reqMesg.Sum(nil))
-	fmt.Println(reqHash)
-	fmt.Println(req.Get("hash"))
-	// The hash we have built should match the request hash
-	if reqHash == req.Get("hash") {
-		sigVerified, err := ssnclient.VerifySignature(req.Get("hash"), req.Get("signature"), req.Get("public_key"), ssnAPI)
-		if ssn.Log(err, "onetimeChargeHandler: Verify signature") {
-			// Error
-			fmt.Println("VerifySignature function returned error")
-		} else if !sigVerified {
-			// Error
-			fmt.Println("Signature invalid")
-		} else {
-			// Step 2 - Resolve Payment Address: https://github.com/sabay-digital/org.ssn.doc.public/blob/master/tg/tg001.md#step-2---resolve-the-payment-address
-			paURL := paResolver + "/resolve/" + ps.ByName("pa")
-			fmt.Println(paURL)
+	// Step 1 - Resolve Payment Address: https://github.com/sabay-digital/org.ssn.doc.public/blob/master/tg/tg001.md#step-1---resolve-the-payment-address
+	paURL := paResolver + "/resolve/" + ps.ByName("pa")
 
-			// Build the request body for the resolver
-			// Hash the URI
-			paMesg := sha256.New()
-			paMesg.Write([]byte(paURL))
-			// Sign the hash
-			paSig, err := kp.Sign(paMesg.Sum(nil))
-			ssn.Log(err, "checkoutHandler: Sign message")
-			// Hex encode for resolver
-			paHash := hex.EncodeToString(paMesg.Sum(nil))
-			paSignature := hex.EncodeToString(paSig)
+	// Build the request body for the resolver
+	// Hash the URL
+	paMesg := sha256.New()
+	paMesg.Write([]byte(paURL))
+	// Sign the hash
+	paSig, err := kp.Sign(paMesg.Sum(nil))
+	ssn.Log(err, "onetimeChargeHandler: Sign message")
+	// Hex encode for resolver
+	paHash := hex.EncodeToString(paMesg.Sum(nil))
+	paSignature := hex.EncodeToString(paSig)
 
-			// Resolve
-			payment, err := ssnclient.ResolvePA(ps.ByName("pa"), paHash, paSignature, kp.Address(), assetIssuer, paResolver)
-			if ssn.Log(err, "onetimeChargeHandler: Resolve payment address") {
+	// Resolve
+	payment, err := ssnclient.ResolvePA(ps.ByName("pa"), paHash, paSignature, kp.Address(), assetIssuer, paResolver)
+	if ssn.Log(err, "onetimeChargeHandler: Resolve payment address") {
+		// Error
+		fmt.Println("ResolvePA function returned error")
+	} else {
+		// Step 2 - Verify Request Signature: https://github.com/sabay-digital/org.ssn.doc.public/blob/master/tg/tg001.md#step-2---verify-the-requst-signature-is-valid
+		// Build the request URL
+		reqURL := "https://" + r.Host + r.RequestURI
+		// Hash the request URL
+		reqMesg := sha256.New()
+		reqMesg.Write([]byte(reqURL))
+		reqHash := hex.EncodeToString(reqMesg.Sum(nil))
+		// The hash we have built should match the request hash
+		if reqHash == req.Get("hash") {
+			sigVerified, err := ssnclient.VerifySignature(req.Get("hash"), req.Get("signature"), req.Get("public_key"), ssnAPI)
+			if ssn.Log(err, "onetimeChargeHandler: Verify signature") {
 				// Error
-				fmt.Println("ResolvePA function returned error")
+				fmt.Println("VerifySignature function returned error")
+			} else if !sigVerified {
+				// Error
+				fmt.Println("Signature invalid")
 			} else {
-				// Step 3 - Verify Trust: https://github.com/sabay-digital/org.ssn.doc.public/blob/master/tg/tg001.md#step-3---optionally-check-the-trustline-is-valid
+				// Step 3 - Verify Trust: https://github.com/sabay-digital/org.ssn.doc.public/blob/master/tg/tg001.md#step-3---optionally-verify-the-trustline
 				trusted, err := ssnclient.VerifyTrust(payment.Network_address, payment.Details.Payment[0].Asset_code, assetIssuer, ssnAPI)
 				if ssn.Log(err, "onetimeChargeHandler: Verify trust") {
 					// Error
@@ -73,7 +69,7 @@ func onetimeChargeHandler(w http.ResponseWriter, r *http.Request, ps httprouter.
 					// Step 4 - Payment Provider authorization: https://github.com/sabay-digital/org.ssn.doc.public/blob/master/tg/tg001.md#step-4---user-authorizes-the-payment-payment-provider-moves-the-amount-to-escrow
 
 					// At this point the payment provider's UI/UX should takeover to authorize the user and deduct the funds
-					// UI/UX flow should take account of the resolved payment details as documented here: https://github.com/sabay-digital/org.ssn.doc.public/blob/master/tg/tg001.md#step-2---resolve-the-payment-address
+					// UI/UX flow should take account of the resolved payment details as documented here: https://github.com/sabay-digital/org.ssn.doc.public/blob/master/tg/tg001.md#step-1---resolve-the-payment-address
 
 					// Step 5 - Build and Sign SSN payment: https://github.com/sabay-digital/org.ssn.doc.public/blob/master/tg/tg001.md#step-5---build-and-sign-the-payment-for-ssn
 					// Build Txn

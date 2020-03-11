@@ -28,16 +28,13 @@ func addPreauthHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Par
 	req, err := url.ParseQuery(string(in))
 	ssn.Log(err, "addPreauthHandler: Parse URL encoded values")
 
-	// Step 1 - Verify Request Signature:
+	// Step 1 - Verify Request Signature: https://github.com/sabay-digital/org.ssn.doc.public/blob/master/tg/tg001.md#step-1---verify-the-requst-signature-is-valid
 	// Build the request URL
 	reqURL := "https://" + r.Host + r.RequestURI
-	fmt.Println(reqURL)
 	// Hash the request URL
 	reqMesg := sha256.New()
 	reqMesg.Write([]byte(reqURL))
 	reqHash := hex.EncodeToString(reqMesg.Sum(nil))
-	fmt.Println(reqHash)
-	fmt.Println(req.Get("hash"))
 	// The hash we have built should match the request hash
 	if reqHash == req.Get("hash") && req.Get("public_key") == ps.ByName("pk") {
 		sigVerified, err := ssnclient.VerifySignature(req.Get("hash"), req.Get("signature"), req.Get("public_key"), ssnAPI)
@@ -48,7 +45,7 @@ func addPreauthHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Par
 			// Error
 			fmt.Println("Signature invalid")
 		} else {
-			// Step 2 - Verify all trustlines in place
+			// Step 2 - Verify all trustlines in place: https://github.com/sabay-digital/org.ssn.doc.public/blob/master/tg/tg001.md#step-2---verify-the-trustlines
 			// Should look up trust lines to MK and compare with PP customers accounts
 			ccy := make([]string, 0)
 			trust, err := ssnclient.VerifyTrust(ps.ByName("mk"), "USD", assetIssuer, ssnAPI)
@@ -60,14 +57,14 @@ func addPreauthHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Par
 				// Error
 				fmt.Println("Trust missing")
 			} else {
-				// Step 3 - User authorizes the pre-authorization
+				// Step 3 - User authorizes the pre-authorization: https://github.com/sabay-digital/org.ssn.doc.public/blob/master/tg/tg001.md#step-3---user-authorizes-the-pre-authorization
 
 				// At this point the payment provider's UI/UX should takeover to authorize the user and offer the ability to set pre-authorization limits
 				// Get the merchant name from the network - this can be used in the view
 				service, err := ssnclient.GetServiceName(ps.ByName("mk"), ssnAPI)
 				ssn.Log(err, "addPreauthHandler: Get service name")
 
-				// Step 4 - Add User and Merchant keys to a database
+				// Step 4 - Add User and Merchant keys to a database: https://github.com/sabay-digital/org.ssn.doc.public/blob/master/tg/tg001.md#step-4---add-user-and-merchant-keys-to-a-database
 			}
 		}
 	}

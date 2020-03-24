@@ -1,16 +1,19 @@
 import org.stellar.sdk.*;
+import com.google.common.hash.*;
 import com.google.common.io.*;
 
 public class Signature {
 
     public static void hash() {
+        // Usually a full request URL like https://pa.ssn.digital/v2/resolve/37837941*testing.mysabay.com
         String mesg = "Some message";
  
         // Hash
-        MessageDigest md = MessageDigest.getInstance("SHA-256");  
-        byte[] h = md.digest(mesg.getBytes(StandardCharsets.UTF_8));
+        HashCode h = Hashing.sha256().hashString(mesg, StandardCharsets.UTF_8);
 
-        String hash = BaseEncoding.base16().encode(h); // Use guava.dev
+        // Encode results in hex
+        String hash = h.toString();
+        
         System.out.println(hash);
     }
 

@@ -7,3 +7,4 @@ Technical Guides describe services and solutions offered on SSN and how to imple
 * TG004 [Implementation of a payment address resolver](/tg/tg004.md)
 * TG005 [PIN less top-up for mySabay accounts](/tg/tg005.md)
 * TG006 [Using cryptographic signatures on SSN](/tg/tg006.md)
+* TG008 [Implementation guide for online merchants](/tg/tg008.md)
